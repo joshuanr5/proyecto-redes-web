@@ -1,0 +1,415 @@
+import React, { useState } from 'react';
+import _ from 'lodash';
+import {
+  Divider,
+  Paper,
+  Grid,
+  Typography,
+  TextField,
+  FormControl,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Select,
+  MenuItem,
+  InputLabel,
+  OutlinedInput,
+  Button,
+  Avatar,
+  makeStyles
+} from '@material-ui/core';
+
+const useStyles = makeStyles({
+  container: {
+    padding: '40px 200px'
+  },
+  bigLabel: {
+    fontWeight: 700,
+    color: '#47525e',
+    textAlign: 'center',
+    margin: 'auto 0'
+  },
+  labelContainer: {
+    display: 'flex'
+  },
+  avatar: {
+    width: 60,
+    height: 60,
+    fontSize: '25px'
+  },
+  avatarContainer: {
+    display: 'flex',
+    position: 'absolute',
+    right: '60px',
+    top: '50px'
+  }
+});
+
+function Test({ history }) {
+  const classes = useStyles();
+  const [age, setage] = useState('');
+  const [gender, setgender] = useState('');
+  const [jobs, setjobs] = useState('');
+  const [housing, sethousing] = useState('');
+  const [account, setaccount] = useState('');
+  const [credit, setcredit] = useState('');
+  const [fees, setfees] = useState('');
+  const [purpose, setpurpose] = useState('');
+
+  const inputLabel = React.useRef(null);
+  const [labelWidth, setLabelWidth] = React.useState(0);
+  React.useEffect(() => {
+    setLabelWidth(inputLabel.current.offsetWidth);
+  }, []);
+
+  const setState = {
+    setage,
+    setgender,
+    setjobs,
+    sethousing,
+    setaccount,
+    setcredit,
+    setfees,
+    setpurpose
+  };
+
+  const handleChange = (type, ev) => {
+    // setstate({ [type]: ev.target.value });
+    // setgender(ev.target.value);
+    console.log(type, ev.target.value);
+
+    setState[`set${type}`](ev.target.value);
+  };
+
+  const handleClick = type => {
+    if (type === 'send') {
+      const data = {
+        age,
+        gender,
+        jobs,
+        housing,
+        account,
+        credit,
+        fees,
+        purpose
+      };
+
+      console.log('Data ->', data);
+      const result = Math.random() > 0.5 ? 'good' : 'bad';
+      history.push(`/result?type=${result}`);
+    } else {
+      _.forEach(setState, setSingleState => setSingleState(''));
+    }
+  };
+
+  return (
+    <Paper className={classes.container}>
+      <div className={classes.avatarContainer}>
+        <Avatar className={classes.avatar}>JN</Avatar>
+      </div>
+      <form>
+        <Grid container>
+          <Grid container justify="center">
+            <Grid item xs="auto">
+              <Typography
+                variant="h3"
+                gutterBottom
+                style={{ marginBottom: '40px' }}
+                className={classes.bigLabel}
+              >
+                Simulador de Riesgo Crediticio
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h4" gutterBottom>
+                Ingreso de datos
+              </Typography>
+            </Grid>
+            <Divider
+              component="hr"
+              style={{ width: '100%', marginBottom: '40px' }}
+            />
+            <Grid container style={{ paddingLeft: '40px' }}>
+              <Grid />
+              <Grid container justify="space-between">
+                <Grid item xs={4} className={classes.labelContainer}>
+                  <Typography variant="h5" className={classes.bigLabel}>
+                    Edad
+                  </Typography>
+                </Grid>
+                <Grid item xs={8}>
+                  <Grid item xs={8}>
+                    <TextField
+                      id="age"
+                      label="Escriba su edad"
+                      placeholder="Ej: 24"
+                      value={age}
+                      onChange={handleChange.bind(this, 'age')}
+                      type="number"
+                      className={classes.textField}
+                      margin="dense"
+                      variant="outlined"
+                      fullWidth
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid container justify="space-between">
+                <Grid item xs={4} className={classes.labelContainer}>
+                  <Typography variant="h5" className={classes.bigLabel}>
+                    Sexo
+                  </Typography>
+                </Grid>
+                <Grid item xs={8}>
+                  <FormControl
+                    component="fieldset"
+                    margin="dense"
+                    required
+                    // className={classes.formControl}
+                  >
+                    <RadioGroup
+                      aria-label="Gender"
+                      name="gender"
+                      value={gender}
+                      onChange={handleChange.bind(this, 'gender')}
+                      row
+                    >
+                      <FormControlLabel
+                        value="female"
+                        control={<Radio />}
+                        label="Femenino"
+                      />
+                      <FormControlLabel
+                        value="male"
+                        control={<Radio />}
+                        label="Masculino"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+              </Grid>
+              <Grid container justify="space-between">
+                <Grid item xs={4} className={classes.labelContainer}>
+                  <Typography variant="h5" className={classes.bigLabel}>
+                    Trabajos
+                  </Typography>
+                </Grid>
+                <Grid item xs={8}>
+                  <Grid item xs={8}>
+                    <TextField
+                      id="age"
+                      label="Escriba la cantidad de trabajos"
+                      placeholder="Ej: 2"
+                      value={jobs}
+                      onChange={handleChange.bind(this, 'jobs')}
+                      type="number"
+                      className={classes.textField}
+                      margin="dense"
+                      variant="outlined"
+                      fullWidth
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid container justify="space-between">
+                <Grid item xs={4} className={classes.labelContainer}>
+                  <Typography variant="h5" className={classes.bigLabel}>
+                    Tipo de alojamiento
+                  </Typography>
+                </Grid>
+                <Grid item xs={8}>
+                  <FormControl
+                    component="fieldset"
+                    margin="dense"
+                    // className={classes.formControl}
+                  >
+                    <RadioGroup
+                      aria-label="Housing"
+                      name="housing"
+                      value={housing}
+                      onChange={handleChange.bind(this, 'housing')}
+                      row
+                    >
+                      <FormControlLabel
+                        value="own"
+                        control={<Radio />}
+                        label="Propio"
+                      />
+                      <FormControlLabel
+                        value="rent"
+                        control={<Radio />}
+                        label="Rentado"
+                      />
+                      <FormControlLabel
+                        value="free"
+                        control={<Radio />}
+                        label="Gratis"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+              </Grid>
+              <Grid container justify="space-between">
+                <Grid item xs={4} className={classes.labelContainer}>
+                  <Typography variant="h5" className={classes.bigLabel}>
+                    Cuenta de ahorro
+                  </Typography>
+                </Grid>
+                <Grid item xs={8}>
+                  <Grid item xs={8}>
+                    <FormControl
+                      margin="dense"
+                      variant="outlined"
+                      required
+                      fullWidth
+                    >
+                      <InputLabel ref={inputLabel} htmlFor="account">
+                        Selecciona la cuenta de ahorros
+                      </InputLabel>
+                      <Select
+                        value={account}
+                        onChange={handleChange.bind(this, 'account')}
+                        input={
+                          <OutlinedInput
+                            labelWidth={labelWidth}
+                            name="account"
+                            id="account"
+                          />
+                        }
+                      >
+                        <MenuItem value={'na'}>NA</MenuItem>
+                        <MenuItem value={'little'}>Poco</MenuItem>
+                        <MenuItem value={'moderate'}>Moderado</MenuItem>
+                        <MenuItem value={'quiterich'}>Casi rico</MenuItem>
+                        <MenuItem value={'rich'}>Rico</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid container justify="space-between">
+                <Grid item xs={4} className={classes.labelContainer}>
+                  <Typography variant="h5" className={classes.bigLabel}>
+                    Monto de credito
+                  </Typography>
+                </Grid>
+                <Grid item xs={8}>
+                  <Grid item xs={8}>
+                    <TextField
+                      id="credit"
+                      label="Escriba el monto"
+                      placeholder="Ej: 15 000"
+                      value={credit}
+                      onChange={handleChange.bind(this, 'credit')}
+                      type="number"
+                      className={classes.textField}
+                      margin="dense"
+                      variant="outlined"
+                      fullWidth
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid container justify="space-between">
+                <Grid item xs={4} className={classes.labelContainer}>
+                  <Typography variant="h5" className={classes.bigLabel}>
+                    Plazo en cuotas
+                  </Typography>
+                </Grid>
+                <Grid item xs={8}>
+                  <Grid item xs={8}>
+                    <TextField
+                      id="fees"
+                      label="Escriba las cuotas"
+                      placeholder="Ej: 12"
+                      value={fees}
+                      onChange={handleChange.bind(this, 'fees')}
+                      type="number"
+                      className={classes.textField}
+                      margin="dense"
+                      variant="outlined"
+                      fullWidth
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid container justify="space-between">
+                <Grid item xs={4} className={classes.labelContainer}>
+                  <Typography variant="h5" className={classes.bigLabel}>
+                    Proposito
+                  </Typography>
+                </Grid>
+                <Grid item xs={8}>
+                  <Grid item xs={8}>
+                    <FormControl margin="dense" variant="outlined" fullWidth>
+                      <InputLabel ref={inputLabel} htmlFor="purpose">
+                        Selecciona el proposito del credito
+                      </InputLabel>
+                      <Select
+                        value={purpose}
+                        onChange={handleChange.bind(this, 'purpose')}
+                        input={
+                          <OutlinedInput
+                            labelWidth={labelWidth}
+                            name="purpose"
+                            id="purpose"
+                          />
+                        }
+                      >
+                        <MenuItem value={'car'}>Carro</MenuItem>
+                        <MenuItem value={'furniture/equipment'}>
+                          Inmoviliario/Equipo
+                        </MenuItem>
+                        <MenuItem value={'radio/TV'}>Radio/TV</MenuItem>
+                        <MenuItem value={'domestic appliances'}>
+                          Usos domesticos
+                        </MenuItem>
+                        <MenuItem value={'repairs'}>Refacciones</MenuItem>
+                        <MenuItem value={'education'}>Educación</MenuItem>
+                        <MenuItem value={'business'}>Neogocios</MenuItem>
+                        <MenuItem value={'vacation/others'}>
+                          Vacaciones/Otros
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid
+                container
+                justify="space-between"
+                style={{ marginTop: '40px' }}
+              >
+                <Grid container item xs={9} justify="space-between">
+                  <Grid item xs={4}>
+                    <Button
+                      onClick={handleClick.bind(this, 'clear')}
+                      variant="outlined"
+                      className={classes.button}
+                      fullWidth
+                    >
+                      Borrar
+                    </Button>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Button
+                      onClick={handleClick.bind(this, 'send')}
+                      variant="outlined"
+                      className={classes.button}
+                      fullWidth
+                    >
+                      Enviar
+                    </Button>
+                  </Grid>
+                </Grid>
+                <Grid item xs={6} />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </form>
+    </Paper>
+  );
+}
+
+export default Test;
