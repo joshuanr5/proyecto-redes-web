@@ -8,6 +8,8 @@ import {
   makeStyles
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import API from '../../libs/api';
+import { setToken, loggedIn } from '../../libs/auth';
 
 const useStyles = makeStyles({
   form: {
@@ -21,13 +23,7 @@ const useStyles = makeStyles({
   container: {
     height: '100%'
   },
-  field: {
-    // width: '100%'
-    display: 'flex',
-    justifyContent: 'center',
-    marginBottom: '20px'
-    // alignItems: 'center'
-  }
+  link: { color: '#3f51b5', fontSize: '0.875rem' }
 });
 
 const Login = ({ history }) => {
@@ -35,11 +31,27 @@ const Login = ({ history }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleClick = () => {
+  const handleClick = async () => {
     console.log(email, password);
 
-    history.push('/test');
+    try {
+      const {
+        data: { token }
+      } = await API.login({ email, password });
+
+      console.log(token);
+
+      setToken(token);
+      history.push('/test');
+    } catch (error) {
+      console.error(error.response.data);
+    }
   };
+
+  if (loggedIn()) {
+    history.push('/test');
+    return null;
+  }
 
   return (
     <Paper className={classes.form}>
@@ -49,23 +61,23 @@ const Login = ({ history }) => {
         // direction="column"
         // alignItems="center"
       >
-        <Grid item xs={12} className={classes.field}>
-          <Typography variant="h4" component="h2" gutterBottom>
+        <Grid item xs={12}>
+          <Typography align="center" variant="h4" component="h2" gutterBottom>
             Simulador de riesgo crediticio
           </Typography>
         </Grid>
-        <Grid
-          item
-          xs={12}
-          className={classes.field}
-          style={{ color: '#a8b2c1' }}
-        >
-          <Typography variant="subtitle1" component="h2" gutterBottom>
+        <Grid item xs={12} style={{ color: '#a8b2c1' }}>
+          <Typography
+            align="center"
+            variant="subtitle1"
+            component="h2"
+            gutterBottom
+          >
             Análisis mediante la clasificación del riesgo crediticio
           </Typography>
         </Grid>
         <Grid container justify="center">
-          <Grid xs={6} item>
+          <Grid xs={12} sm={10} md={8} lg={6} item>
             <TextField
               id="outlined-email-input"
               label="Email"
@@ -83,7 +95,7 @@ const Login = ({ history }) => {
           </Grid>
         </Grid>
         <Grid container justify="center">
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={10} md={8} lg={6}>
             <TextField
               id="outlined-password-input"
               label="Password"
@@ -103,10 +115,11 @@ const Login = ({ history }) => {
           justify="center"
           style={{ margin: '20px 0px 20px 0px' }}
         >
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={10} md={8} lg={6}>
             <Button
               onClick={handleClick}
               variant="contained"
+              color="primary"
               className={classes.button}
               fullWidth
             >
@@ -114,10 +127,23 @@ const Login = ({ history }) => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item xs={12} className={classes.field}>
-          <Link to="/recovery" style={{ color: '#a8b2c1' }}>
-            Recuperar contraseña
-          </Link>
+        <Grid container justify="center">
+          <Grid
+            container
+            justify="space-between"
+            item
+            xs={12}
+            sm={10}
+            md={8}
+            lg={6}
+          >
+            <Link to="/recovery" className={classes.link}>
+              Olvidó su clave?
+            </Link>
+            <Link to="/signup" className={classes.link}>
+              No tiene cuenta? Registrese
+            </Link>
+          </Grid>
         </Grid>
       </Grid>
     </Paper>

@@ -18,10 +18,12 @@ import {
   Avatar,
   makeStyles
 } from '@material-ui/core';
+import { logout } from '../../libs/auth';
 
 const useStyles = makeStyles({
   container: {
-    padding: '40px 200px'
+    padding: '40px 200px',
+    height: '100%'
   },
   bigLabel: {
     fontWeight: 700,
@@ -41,7 +43,8 @@ const useStyles = makeStyles({
     display: 'flex',
     position: 'absolute',
     right: '60px',
-    top: '50px'
+    top: '50px',
+    cursor: 'pointer'
   }
 });
 
@@ -102,9 +105,14 @@ function Test({ history }) {
     }
   };
 
+  const handleLogout = () => {
+    logout();
+    history.push('/login');
+  };
+
   return (
     <Paper className={classes.container}>
-      <div className={classes.avatarContainer}>
+      <div className={classes.avatarContainer} onClick={handleLogout}>
         <Avatar className={classes.avatar}>JN</Avatar>
       </div>
       <form>
