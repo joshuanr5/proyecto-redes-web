@@ -16,7 +16,16 @@ const login = data => {
   });
 };
 
+const predict = data => {
+  return axiosAPI({
+    method: 'post',
+    url: 'public/test/predict',
+    data
+  });
+}
+
 export default {
   signup,
-  login
+  login,
+  predict
 };

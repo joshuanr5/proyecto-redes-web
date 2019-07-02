@@ -18,6 +18,7 @@ import {
   Avatar,
   makeStyles
 } from '@material-ui/core';
+import API from '../../libs/api';
 import { logout } from '../../libs/auth';
 
 const useStyles = makeStyles({
@@ -79,27 +80,35 @@ function Test({ history }) {
   const handleChange = (type, ev) => {
     // setstate({ [type]: ev.target.value });
     // setgender(ev.target.value);
-    console.log(type, ev.target.value);
+    // console.log(type, ev.target.value);
 
     setState[`set${type}`](ev.target.value);
   };
 
-  const handleClick = type => {
+  const handleClick = async type => {
     if (type === 'send') {
       const data = {
-        age,
-        gender,
-        jobs,
-        housing,
-        account,
-        credit,
-        fees,
-        purpose
+        Age: parseInt(age, 10),
+        Sexo: gender,
+        Trabajo: parseInt(jobs, 10),
+        Alojamiento: housing,
+        CuentaDeAhorros: account,
+        MontoDeCredito: parseInt(credit, 10),
+        Duracion: parseInt(fees, 10),
+        Proposito: purpose
       };
 
-      console.log('Data ->', data);
-      const result = Math.random() > 0.5 ? 'good' : 'bad';
-      history.push(`/result?type=${result}`);
+      try {
+        console.log(data);
+
+        const {
+          data: { result }
+        } = await API.predict(data);
+        console.log('result ->', result);
+        history.push(`/result?type=${result}`);
+      } catch (error) {
+        console.error(error);
+      }
     } else {
       _.forEach(setState, setSingleState => setSingleState(''));
     }
@@ -183,12 +192,12 @@ function Test({ history }) {
                       row
                     >
                       <FormControlLabel
-                        value="female"
+                        value="F"
                         control={<Radio />}
                         label="Femenino"
                       />
                       <FormControlLabel
-                        value="male"
+                        value="M"
                         control={<Radio />}
                         label="Masculino"
                       />
@@ -239,17 +248,17 @@ function Test({ history }) {
                       row
                     >
                       <FormControlLabel
-                        value="own"
+                        value="prop"
                         control={<Radio />}
                         label="Propio"
                       />
                       <FormControlLabel
-                        value="rent"
+                        value="rentado"
                         control={<Radio />}
                         label="Rentado"
                       />
                       <FormControlLabel
-                        value="free"
+                        value="gratis"
                         control={<Radio />}
                         label="Gratis"
                       />
@@ -286,10 +295,10 @@ function Test({ history }) {
                         }
                       >
                         <MenuItem value={'na'}>NA</MenuItem>
-                        <MenuItem value={'little'}>Poco</MenuItem>
-                        <MenuItem value={'moderate'}>Moderado</MenuItem>
-                        <MenuItem value={'quiterich'}>Casi rico</MenuItem>
-                        <MenuItem value={'rich'}>Rico</MenuItem>
+                        <MenuItem value={'poco'}>Poco</MenuItem>
+                        <MenuItem value={'moderado'}>Moderado</MenuItem>
+                        <MenuItem value={'casi rico'}>Casi rico</MenuItem>
+                        <MenuItem value={'rico'}>Rico</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
@@ -364,18 +373,18 @@ function Test({ history }) {
                           />
                         }
                       >
-                        <MenuItem value={'car'}>Carro</MenuItem>
-                        <MenuItem value={'furniture/equipment'}>
+                        <MenuItem value={'carro'}>Carro</MenuItem>
+                        <MenuItem value={'inmoviliario/equipo'}>
                           Inmoviliario/Equipo
                         </MenuItem>
                         <MenuItem value={'radio/TV'}>Radio/TV</MenuItem>
-                        <MenuItem value={'domestic appliances'}>
+                        <MenuItem value={'usos domesticos'}>
                           Usos domesticos
                         </MenuItem>
-                        <MenuItem value={'repairs'}>Refacciones</MenuItem>
-                        <MenuItem value={'education'}>Educación</MenuItem>
-                        <MenuItem value={'business'}>Neogocios</MenuItem>
-                        <MenuItem value={'vacation/others'}>
+                        <MenuItem value={'refacciones'}>Refacciones</MenuItem>
+                        <MenuItem value={'educacion'}>Educación</MenuItem>
+                        <MenuItem value={'negocios'}>Neogocios</MenuItem>
+                        <MenuItem value={'vacaciones/otros'}>
                           Vacaciones/Otros
                         </MenuItem>
                       </Select>
