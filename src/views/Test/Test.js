@@ -46,6 +46,12 @@ const useStyles = makeStyles({
     right: '60px',
     top: '50px',
     cursor: 'pointer'
+  },
+  list: {
+    backgroundColor: '#ffdfd4',
+    borderRadius: '20px',
+    padding: '20px',
+    listStyle: 'none'
   }
 });
 
@@ -59,6 +65,7 @@ function Test({ history }) {
   const [credit, setcredit] = useState('');
   const [fees, setfees] = useState('');
   const [purpose, setpurpose] = useState('');
+  const [errors, seterrors] = useState([]);
 
   const inputLabel = React.useRef(null);
   const [labelWidth, setLabelWidth] = React.useState(0);
@@ -97,17 +104,31 @@ function Test({ history }) {
         Duracion: parseInt(fees, 10),
         Proposito: purpose
       };
+      console.log(data);
+      const errorsTemp = [];
+      _.forEach(data, (dt, idx) => {
+        if (dt === '' || _.isNaN(dt)) {
+          console.log(dt, idx);
+          errorsTemp.push(`"${idx}" es requerido`);
+        }
+      });
 
-      try {
-        console.log(data);
+      console.log(errorsTemp);
 
-        const {
-          data: { result }
-        } = await API.predict(data);
-        console.log('result ->', result);
-        history.push(`/result?type=${result}`);
-      } catch (error) {
-        console.error(error);
+      if (!_.isEmpty(errorsTemp)) {
+        seterrors(errorsTemp);
+      } else {
+        try {
+          console.log(data);
+
+          const {
+            data: { result }
+          } = await API.predict(data);
+          console.log('result ->', result);
+          history.push(`/result?type=${result}`);
+        } catch (error) {
+          console.error(error);
+        }
       }
     } else {
       _.forEach(setState, setSingleState => setSingleState(''));
@@ -147,7 +168,20 @@ function Test({ history }) {
               style={{ width: '100%', marginBottom: '40px' }}
             />
             <Grid container style={{ paddingLeft: '40px' }}>
-              <Grid />
+              {_.isEmpty(errors) ? null : (
+                <Grid item container justify="center">
+                  <ul className={classes.list}>
+                    {_.map(errors, (e, idx) => {
+                      console.log(e, idx);
+                      return (
+                        <li style={{ color: 'red' }} key={idx}>
+                          {e}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </Grid>
+              )}
               <Grid container justify="space-between">
                 <Grid item xs={4} className={classes.labelContainer}>
                   <Typography variant="h5" className={classes.bigLabel}>
