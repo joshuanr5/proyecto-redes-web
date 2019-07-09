@@ -1,7 +1,7 @@
 # PROYECTO RESDES WEB
 
-## Pre-requisitos
-- Contar con NodeJs Y Yarn instalado
+### Pre-requisitos
+- Contar con NodeJs y Yarn instalado
 
 ## Instalar dependencias
 ```console
